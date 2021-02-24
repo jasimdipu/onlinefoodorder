@@ -68,3 +68,5 @@ def deleteOrder(request, order_id):
         'item': food_order
     }
     return render(request, 'foodorder/delete.html', context=context)
+
+

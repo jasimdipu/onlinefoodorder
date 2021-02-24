@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
+from .order_form import FoodOrderForm
 
 
 # Create your views here.
@@ -29,3 +30,41 @@ def all_foods(request):
         'foods': foods
     }
     return render(request, 'foodorder/foods.html', context=context)
+
+
+def createFoodOrder(request):
+    form = FoodOrderForm()
+    if request.method == "POST":
+        form = FoodOrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    context = {
+        'form': form
+    }
+    return render(request, 'foodorder/foodorderform.html', context=context)
+
+
+def updateFoodOrder(request, order_id):
+    food_order = FoodOrder.objects.get(id=order_id)
+    form = FoodOrderForm(instance=food_order)
+    if request.method == "POST":
+        form = FoodOrderForm(request.POST, instance=food_order)  # global variable/instance/attr
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    context = {
+        "form": form
+    }
+    return render(request, 'foodorder/foodorderform.html', context=context)
+
+
+def deleteOrder(request, order_id):
+    food_order = FoodOrder.objects.get(id=order_id)
+    if request.method == "POST":
+        food_order.delete()
+        return redirect('/')
+    context = {
+        'item': food_order
+    }
+    return render(request, 'foodorder/delete.html', context=context)

@@ -1,0 +1,10 @@
+{% extends 'foodorder/master.html' %}
+{% block content %}
+    <p style="color: red">Are you sure to delete this {{ item }}?</p>
+
+    <form action="#" method="post">
+        {% csrf_token %}
+        <a href="{% url 'home' %}" class="btn btn-info btn-sm">Cancel</a>
+        <input class="btn btn-sm btn-danger" type="submit" name="Delete" value="Delete">
+    </form>
+{% endblock %}

@@ -7,10 +7,10 @@
     <div class="row">
         <div class="col-md">
             <div class="card card-body">
-                <h5>Customer:</h5>
+                <h5>Customer: {{ customer.name }}</h5>
                 <hr>
                 <a class="btn btn-outline-info  btn-sm btn-block" href="">Update Customer</a>
-                <a class="btn btn-outline-danger  btn-sm btn-block" href="">Delete Customer</a>
+                <a class="btn btn-outline-danger  btn-sm btn-block" href="">Update Order</a>
 
             </div>
         </div>
@@ -19,8 +19,8 @@
             <div class="card card-body">
                 <h5>Contact Information</h5>
                 <hr>
-                <p>Email: </p>
-                <p>Phone: </p>
+                <p>Email: {{ customer.email }}</p>
+                <p>Phone: {{ customer.phone }}</p>
             </div>
         </div>
 
@@ -53,13 +53,23 @@
             <div class="card card-body">
                 <table class="table table-sm">
                     <tr>
-                        <th>Product</th>
+                        <th>Food Name</th>
                         <th>Category</th>
                         <th>Date Ordered</th>
                         <th>Status</th>
                         <th>Update</th>
                         <th>Remove</th>
                     </tr>
+                    {% for food_order in food_orders %}
+                        <tr>
+                            <td>{{ food_order.food.food_name }}</td>
+                            <td>{{ food_order.food.category }}</td>
+                            <td>{{ food_order.food.date_created }}/td>
+                            <td>{{ food_order.status }}</td>
+                            <td><a href="#" class="btn btn-sm btn-info">Update</a></td>
+                            <td><a href="#" class="btn btn-sm btn-danger">Remove</a></td>
+                        </tr>
+                    {% endfor %}
 
 
                 </table>

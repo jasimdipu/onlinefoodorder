@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *
 from .order_form import FoodOrderForm
+from django.forms import inlineformset_factory
 
 
 # Create your views here.
@@ -32,15 +33,20 @@ def all_foods(request):
     return render(request, 'foodorder/foods.html', context=context)
 
 
-def createFoodOrder(request):
+def createFoodOrder(request, cus_id):
+    OrderFoodFromSet = inlineformset_factory(Customer, FoodOrder, fields=('food', 'status'))
+    customer = Customer.objects.get(id=cus_id)
+    formset = OrderFoodFromSet(instance=customer)
+    # form = OrderFoodFromSet(initial = {'customer':customer})
     form = FoodOrderForm()
     if request.method == "POST":
-        form = FoodOrderForm(request.POST)
-        if form.is_valid():
-            form.save()
+        # form = FoodOrderForm(request.POST)
+        formset = OrderFoodFromSet(request.POST, instance=customer)
+        if formset.is_valid():
+            formset.save()
             return redirect('/')
     context = {
-        'form': form
+        'formset': formset
     }
     return render(request, 'foodorder/foodorderform.html', context=context)
 
@@ -70,3 +76,14 @@ def deleteOrder(request, order_id):
     return render(request, 'foodorder/delete.html', context=context)
 
 
+def customer_details(request, cus_id):
+    customer = Customer.objects.get(id=cus_id)
+    food_orders = customer.foodorder_set.all()
+
+    order_count = food_orders.count()
+
+    context = {
+        'customer': customer, 'food_orders': food_orders, 'order_count': order_count
+    }
+
+    return render(request, 'foodorder/order_details.html', context=context)
